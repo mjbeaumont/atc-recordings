@@ -10,7 +10,7 @@ def test_data():
 
 def test_invalid_date_format(capsys):
     with pytest.raises(SystemExit):
-        fg = FilenameGenerator('KJFK', 'KJFK-Gnd', '2024-13-13 1:00PM', 4)
+        FilenameGenerator('KJFK', 'KJFK-Gnd', '2024-13-13 1:00PM', 4)
         out = capsys.readouterr()
         assert "2024-13-13 1:00PM" in out
 
