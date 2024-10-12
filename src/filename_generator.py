@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import sys
 
 
 class FilenameGenerator:
@@ -36,11 +37,12 @@ class FilenameGenerator:
             for _ in range(1, self.num):
                 next_time = times[-1] + time_delta
                 times.append(next_time)
+            return times
         except ValueError:
             print(
                 f'{self.start} does not match the format {self.INPUT_FORMAT}'
             )
-        return times
+            sys.exit(1)
 
     def __generate_filename_datecomponent(self):
         times = self.__generate_times()

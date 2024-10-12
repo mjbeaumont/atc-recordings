@@ -8,10 +8,13 @@ def test_data():
     yield fg
 
 
-def test_invalid_date_format():
+def test_invalid_date_format(capsys):
     fg = FilenameGenerator('KJFK', 'KJFK-Gnd', '2024-13-13 1:00PM', 4)
-    result = fg.generate_filenames()
-    assert not result
+    with pytest.raises(SystemExit) as sys_error:
+        fg.generate_filenames()
+        out = capsys.readouterr()
+        assert "2024-13-13 1:00PM" in out
+
 
 def test_generate_filenames(test_data):
     expected_result = [
