@@ -4,7 +4,7 @@ import sys
 
 class FilenameGenerator:
 
-    TIME_FORMAT = '%H:%M'
+    TIME_FORMAT = '%H%M'
     INPUT_FORMAT = f'%Y-%m-%d {TIME_FORMAT}'
     OUTPUT_DATE_FORMAT = '%b-%d-%Y'
     OUTPUT_FORMAT = f'{OUTPUT_DATE_FORMAT}-{TIME_FORMAT}Z'
