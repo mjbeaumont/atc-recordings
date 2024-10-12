@@ -1,5 +1,5 @@
 from pathlib import Path
-import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 import requests
 
@@ -11,7 +11,7 @@ def __download_file(location):
     response = requests.get(location['url'], stream=True, headers=headers)
     response.raise_for_status()
 
-    print(f"Downloading {location['url']}:")
+    tqdm.write(f"Downloading {location['url']}:")
     total_size = int(response.headers.get("content-length", 0))
     chunk_size = 8192
 
@@ -26,5 +26,13 @@ def __download_file(location):
 
 
 def download_files(locations):
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        executor.map(__download_file, locations)
+    with ThreadPoolExecutor() as executor:
+        futures = {
+            executor.submit(__download_file, loc): loc for loc in locations
+        }
+
+        for future in tqdm(as_completed(futures), total=len(futures), desc="Downloading Files"):
+            try:
+                future.result()  # To raise exceptions if any occurred
+            except Exception as e:
+                tqdm.write(f"Error downloading file: {e}")
