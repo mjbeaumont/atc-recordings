@@ -13,8 +13,17 @@ class FilenameGenerator:
     def __init__(self, airport, feed, start, num):
         self.airport = airport
         self.feed = feed
-        self.start = start
         self.num = num
+        self.start = self.__set_start(start)
+
+    def __set_start(self, start_input):
+        try:
+            return datetime.strptime(start_input, self.INPUT_FORMAT)
+        except ValueError:
+            print(
+                f'{start_input} does not match the format {self.INPUT_FORMAT}'
+            )
+            sys.exit(1)
 
     def __get_datetime_string(self, dt, fmt):
         return dt.strftime(fmt)
@@ -30,19 +39,12 @@ class FilenameGenerator:
 
     def __generate_times(self):
         times = []
-        try:
-            initial_time = datetime.strptime(self.start, self.INPUT_FORMAT)
-            times.append(initial_time)
-            time_delta = timedelta(minutes=30)
-            for _ in range(1, self.num):
-                next_time = times[-1] + time_delta
-                times.append(next_time)
-            return times
-        except ValueError:
-            print(
-                f'{self.start} does not match the format {self.INPUT_FORMAT}'
-            )
-            sys.exit(1)
+        times.append(self.start)
+        time_delta = timedelta(minutes=30)
+        for _ in range(1, self.num):
+            next_time = times[-1] + time_delta
+            times.append(next_time)
+        return times
 
     def __generate_filename_datecomponent(self):
         times = self.__generate_times()
