@@ -9,8 +9,9 @@ class FilenameGenerator:
     OUTPUT_FORMAT = f'{OUTPUT_DATE_FORMAT}-{TIME_FORMAT}Z'
     MAIN_URL = 'https://archive.liveatc.net'
 
-    def __init__(self, airport, start, num):
+    def __init__(self, airport, feed, start, num):
         self.airport = airport
+        self.feed = feed
         self.start = start
         self.num = num
 
@@ -51,18 +52,18 @@ class FilenameGenerator:
         for date in dates:
             data = {
                 'date': date,
-                'airport_path': self.airport.lower(),
-                'airport_filename': self.airport.upper()
+                'airport': self.airport.lower(),
+                'feed': self.feed
             }
-            filename = f"{data['airport_filename']}-{data['date']}.mp3"
-            url = f"{self.MAIN_URL}/{data['airport_path']}/{filename}"
+            filename = f"{data['feed']}-{data['date']}.mp3"
+            url = f"{self.MAIN_URL}/{data['airport']}/{filename}"
             files.append({"filename": filename, "url": url})
         return files
 
     def generate_combined_filename(self):
         times = self.__generate_times()
-        airport = self.airport.upper()
+        feed = self.feed
         date = self.__format_date(times[0])
         start_time = self.__format_time(times[0])
         end_time = self.__format_time(times[-1])
-        return f'{airport}-{date}-{start_time}-{end_time}Z-combined.mp3'
+        return f'{feed}-{date}-{start_time}-{end_time}Z-combined.mp3'
