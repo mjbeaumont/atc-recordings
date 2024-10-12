@@ -32,7 +32,7 @@ class FilenameGenerator:
             initial_time = datetime.strptime(self.start, self.INPUT_FORMAT)
             times.append(initial_time)
             time_delta = timedelta(minutes=30)
-            for _ in range(self.num):
+            for _ in range(1, self.num):
                 next_time = times[-1] + time_delta
                 times.append(next_time)
         except ValueError:
