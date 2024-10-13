@@ -61,7 +61,7 @@ class FilenameGenerator:
             }
             filename = f"{data['feed']}-{data['date']}.mp3"
             url = f"{self.MAIN_URL}/{data['airport']}/{filename}"
-            files.append({"filename": filename, "url": url})
+            files.append(url)
         return files
 
     def generate_combined_filename(self):

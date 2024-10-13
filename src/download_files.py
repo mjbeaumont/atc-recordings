@@ -4,14 +4,14 @@ from tqdm import tqdm
 import requests
 
 
-def __download_file(location):
+def __download_file(url):
     headers = {
         'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36'
     }
-    response = requests.get(location['url'], stream=True, headers=headers)
+    response = requests.get(url, stream=True, headers=headers)
     response.raise_for_status()
 
-    tqdm.write(f"Downloading {location['url']}:")
+    tqdm.write(f"Downloading {url}:")
     total_size = int(response.headers.get("content-length", 0))
     chunk_size = 8192
 
@@ -19,16 +19,18 @@ def __download_file(location):
     Path(filepath).mkdir(parents=True, exist_ok=True)
 
     with tqdm(total=total_size, unit="B", unit_scale=True) as progress_bar:
-        with open(f"{filepath}{location['filename']}", 'wb') as file:
+        filename = url.split('/')[-1]
+        output_filename = f"{filepath}{filename}"
+        with open(output_filename, 'wb') as file:
             for chunk in response.iter_content(chunk_size=chunk_size):
                 progress_bar.update(len(chunk))
                 file.write(chunk)
 
 
-def download_files(locations):
+def download_files(urls):
     with ThreadPoolExecutor() as executor:
         futures = {
-            executor.submit(__download_file, loc): loc for loc in locations
+            executor.submit(__download_file, url): url for url in urls
         }
 
         for future in tqdm(as_completed(futures), total=len(futures), desc="Downloading Files"):
