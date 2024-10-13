@@ -11,24 +11,23 @@ def __download_file(url):
     response = requests.get(url, stream=True, headers=headers)
     response.raise_for_status()
 
-    tqdm.write(f"Downloading {url}:")
     total_size = int(response.headers.get("content-length", 0))
-    chunk_size = 8192
 
     filepath = 'tmp/'
     Path(filepath).mkdir(parents=True, exist_ok=True)
 
-    with tqdm(total=total_size, unit="B", unit_scale=True) as progress_bar:
+    with tqdm(total=total_size, unit="B", unit_scale=True, desc=url) as progress_bar:
         filename = url.split('/')[-1]
         output_filename = f"{filepath}{filename}"
         with open(output_filename, 'wb') as file:
-            for chunk in response.iter_content(chunk_size=chunk_size):
+            for chunk in response.iter_content():
                 progress_bar.update(len(chunk))
                 file.write(chunk)
 
 
 def download_files(urls):
-    with ThreadPoolExecutor() as executor:
+    max_workers = 3
+    with ThreadPoolExecutor(max_workers = max_workers) as executor:
         futures = {
             executor.submit(__download_file, url): url for url in urls
         }
