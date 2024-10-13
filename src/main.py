@@ -1,7 +1,9 @@
 from filename_generator import FilenameGenerator
-from download_files import download_files
+from  filemanager import FileManager
 
-fg = FilenameGenerator('kcdw', 'KCDW', '2024-10-10 1200', 10)
+fg = FilenameGenerator('kcdw', 'KCDW', '2024-10-10 1200', 4) 
 urls = fg.generate_filenames()
+combined_filename = fg.generate_combined_filename()
 
-download_files(urls)
+fm = FileManager(urls, combined_filename)
+fm.process_recordings()
