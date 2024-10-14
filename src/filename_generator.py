@@ -3,12 +3,22 @@ import sys
 
 
 class FilenameGenerator:
+    """
+        Used to generate a list of filenames to download from liveatc.net, and
+        to generate the name of the final outputted recording
+    """
 
     TIME_FORMAT = '%H%M'
     INPUT_FORMAT = f'%Y-%m-%d {TIME_FORMAT}'
     OUTPUT_DATE_FORMAT = '%b-%d-%Y'
     OUTPUT_FORMAT = f'{OUTPUT_DATE_FORMAT}-{TIME_FORMAT}Z'
     MAIN_URL = 'https://archive.liveatc.net'
+    """
+        Class constants. Used to match the format of feed archive files
+        at liveatc.net
+
+        eg. https://archive.liveatc.net/kcdw/KCDW-Oct-10-2024-1000Z.mp3
+    """
 
     def __init__(self, airport, feed, start, num):
         self.airport = airport
@@ -51,6 +61,10 @@ class FilenameGenerator:
         return list(map(self.__format_datetime, times))
 
     def generate_filenames(self):
+        """
+            Generate a list of URLs to download from liveatc.net using
+            the class' airport, feed name, date & time
+        """
         dates = self.__generate_filename_datecomponent()
         files = []
         for date in dates:
@@ -65,6 +79,10 @@ class FilenameGenerator:
         return files
 
     def generate_combined_filename(self):
+        """
+            Using the airport, feed name, date, and list of times,
+            output a filename that contains the correct time range
+        """
         times = self.__generate_times()
         feed = self.feed
         date = self.__format_date(times[0])
