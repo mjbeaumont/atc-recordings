@@ -4,11 +4,19 @@ from  filemanager import FileManager
 import typer
 from typing_extensions import Annotated
 
+app = typer.Typer(no_args_is_help=True)
 
-def main(
+
+@app.command()
+def cleanup():
+    FileManager.cleanup(True)
+
+
+@app.command()
+def download(
         airport: Annotated[str, typer.Argument(help='4-letter ICAO code')],
-        start: Annotated[str, typer.Argument(help='YYYY-mm-dd H:I (in UTC)', prompt=True)],
-        feed: Annotated[Optional[str], typer.Option(help='Defaults to airport if not provided', prompt=True)],
+        start: Annotated[str, typer.Argument(help='YYYY-mm-dd H:I (in UTC)')],
+        feed: Annotated[Optional[str], typer.Option(help='Defaults to airport if not provided')],
         number_of_periods: Annotated[Optional[int], typer.Option(help='How many 30 minute periods to include')] = 4
         ):
     feed_name = feed if feed else airport.upper()
@@ -27,4 +35,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
