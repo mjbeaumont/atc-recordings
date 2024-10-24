@@ -1,6 +1,7 @@
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from shutil import rmtree
+import sys
 from tqdm import tqdm
 import requests
 import ffmpeg
@@ -72,7 +73,7 @@ class FileManager:
                 try:
                     future.result()  # To raise exceptions if any occurred
                 except Exception as e:
-                    tqdm.write(f"Error downloading file: {e}")
+                    sys.exit(f"Error downloading file: {e}")
 
     def __get_downloaded_files(self):
         return list(Path().glob(f'{self.WORKING_DIRECTORY}/*.mp3'))
